@@ -4,10 +4,13 @@ import BookDetails from "../BookDetails.js/BookDetails";
 import { getBooks } from "../../store/BookSlice";
 import { useDispatch, useSelector } from "react-redux";
 function BookContainer() {
+  const dispatch = useDispatch();
+  //books State
   const { books, isLoading, error, bookInfo } = useSelector(
     (state) => state.books
   );
-  const dispatch = useDispatch();
+  //auth State
+  const { isLoggedIn } = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(getBooks());
   }, [dispatch]);
@@ -16,10 +19,10 @@ function BookContainer() {
       <hr className="my-5" />
       <div className="row">
         <div className="col">
-          <BookList isLoading={isLoading} books={books} error={error} />
+          <BookList isLoading={isLoading} books={books} error={error} isLoggedIn={isLoggedIn} />
         </div>
         <div className="col side-line">
-          <BookDetails bookInfo={bookInfo} />
+          <BookDetails bookInfo={bookInfo}/>
         </div>
       </div>
     </div>

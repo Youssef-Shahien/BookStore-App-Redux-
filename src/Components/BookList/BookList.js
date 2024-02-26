@@ -1,8 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { deleteBook, getBook } from "../../store/BookSlice";
-
-function BookList({ isLoading, books, error }) {
+function BookList({ isLoading, books, error,isLoggedIn }) {
   const dispatch = useDispatch();
 
   const bookList =
@@ -17,14 +16,15 @@ function BookList({ isLoading, books, error }) {
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={() => dispatch(getBook(item.id))}
+              onClick={() => dispatch(getBook(item.id))}
               >
                 Read
               </button>
               <button
                 type="button"
                 className="btn btn-danger"
-                onClick={() => dispatch(deleteBook(item.id))}
+              onClick={() => dispatch(deleteBook(item.id))}
+              disabled={!isLoggedIn}
               >
                 Delete
               </button>

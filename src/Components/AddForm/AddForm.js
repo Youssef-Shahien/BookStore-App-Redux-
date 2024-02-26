@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { insertBook } from "../../store/BookSlice";
 function AddForm() {
   const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state) => state.auth);
   //Inputs
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -58,7 +59,11 @@ function AddForm() {
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={!isLoggedIn}
+          >
             Submit
           </button>
         </form>
