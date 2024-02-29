@@ -27,11 +27,13 @@ function Header() {
           </div>
         </div>
       </nav>
-      {isLoggedIn || (
-        <div className="alert alert-primary mb-0 text-center" role="alert">
-          <h5>Pleas Login To Can Access on App</h5>
-        </div>
-      )}
+      {error === null
+        ? isLoggedIn || (
+            <div className="alert alert-primary mb-0 text-center" role="alert">
+              <h5>Pleas Login To Can Access on App</h5>
+            </div>
+          )
+        : ""}
     </div>
   );
 }
