@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-//////////////////// getBooks //////////////////////////
+import { logsInsert } from "./reportSlice";
+//////////////////// getBooks Action //////////////////////////
 
 export const getBooks = createAsyncThunk(
   "book/getBooks",
@@ -15,12 +15,12 @@ export const getBooks = createAsyncThunk(
     }
   }
 );
-//////////////////// insertBook //////////////////////////
+//////////////////// insertBook Action //////////////////////////
 
 export const insertBook = createAsyncThunk(
   "book/insertBook",
   async (dataBook, thunkAPI) => {
-    const { rejectWithValue, getState } = thunkAPI;
+    const { rejectWithValue, getState, dispatch } = thunkAPI;
     try {
       dataBook.userName = getState().auth.name;
       const res = await fetch("http://localhost:3005/books", {
@@ -31,33 +31,35 @@ export const insertBook = createAsyncThunk(
         },
       });
       const data = await res.json();
+      dispatch(logsInsert({ name: "insertBooks", status: "success" }));
       return data;
     } catch (error) {
+      dispatch(logsInsert({ name: "insertBooks", status: "failed" }));
+
       return rejectWithValue(error.message);
     }
   }
 );
-//////////////////// DeleteBook //////////////////////////
+//////////////////// DeleteBook Action //////////////////////////
 
 export const deleteBook = createAsyncThunk(
   "book/deleteBook",
-  async (id, thunkAPI) => {
+  async (item, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
-      await fetch(`http://localhost:3005/books/${id}`, {
+      await fetch(`http://localhost:3005/books/${item.id}`, {
         method: "DELETE",
         headers: {
           "content-type": "application/json; charset=UTF-8",
         },
       });
-      console.log(id);
-      return id;
+      return item;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
-//////////////////// GetBook //////////////////////////
+//////////////////// GetBook Action //////////////////////////
 export const getBook = createAsyncThunk(
   "book/getBook",
   async (id, thunkAPI) => {
@@ -71,7 +73,7 @@ export const getBook = createAsyncThunk(
     }
   }
 );
-//////////////////// CreateSlice //////////////////////////
+//////////////////// CreateSlice Reducer //////////////////////////
 const bookSlice = createSlice({
   name: "book",
   initialState: { books: [], isLoading: false, error: null, bookInfo: null },
@@ -110,9 +112,7 @@ const bookSlice = createSlice({
       })
       .addCase(deleteBook.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log(action);
-        console.log(action.payload);
-        state.books = state.books.filter((el) => el.id !== action.payload);
+        state.books = state.books.filter((el) => el.id !== action.payload.id);
         state.bookInfo = null;
       })
       .addCase(deleteBook.rejected, (state, action) => {

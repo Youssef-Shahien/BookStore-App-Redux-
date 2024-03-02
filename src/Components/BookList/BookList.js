@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { deleteBook, getBook } from "../../store/BookSlice";
-function BookList({ isLoading, books, error,isLoggedIn }) {
+function BookList({ isLoading, books, error, isLoggedIn }) {
   const dispatch = useDispatch();
 
   const bookList =
@@ -16,15 +16,24 @@ function BookList({ isLoading, books, error,isLoggedIn }) {
               <button
                 type="button"
                 className="btn btn-primary"
-              onClick={() => dispatch(getBook(item.id))}
+                onClick={() => dispatch(getBook(item.id))}
               >
                 Read
               </button>
               <button
                 type="button"
                 className="btn btn-danger"
-              onClick={() => dispatch(deleteBook(item.id))}
-              disabled={!isLoggedIn}
+                onClick={() =>
+                  dispatch(deleteBook(item))
+                    .unwrap()
+                    .then((originalPromiseResult) => {
+                      //console.log(originalPromiseResult);
+                    })
+                    .catch((rejectedValueOrSerializedError) => {
+                      //  console.log(rejectedValueOrSerializedError);
+                    })
+                }
+                disabled={!isLoggedIn}
               >
                 Delete
               </button>
