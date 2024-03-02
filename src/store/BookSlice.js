@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { logsInsert } from "./reportSlice";
+import { logsInsert } from "./ReportSlice";
 //////////////////// getBooks Action //////////////////////////
 
 export const getBooks = createAsyncThunk(
